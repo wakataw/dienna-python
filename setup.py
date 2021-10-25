@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='dienna',
-    version='0.1a',
+    version='0.1a1',
     packages=['dienna'],
     url='https://github.com/wakataw/dienna-python',
     license='MIT',
