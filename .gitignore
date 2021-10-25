@@ -4,3 +4,6 @@ venv
 *.egg-info
 *.pdf
 *.ipynb
+.DS_Store
+dist
+amplop.py

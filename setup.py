@@ -8,5 +8,10 @@ setup(
     license='MIT',
     author='Agung Pratama',
     author_email='prrtmgng@gmail.com',
-    description='Office Automation Python SDK'
+    description='Office Automation Python SDK',
+    install_requires=[
+        'requests',
+        'BeautifulSoup4',
+        'html5lib',
+    ],
 )
