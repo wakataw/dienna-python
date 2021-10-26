@@ -16,7 +16,7 @@ class Nadine(object):
     Nadine API Wrapper
     """
 
-    base_url = 'https://office.kemenkeu.go.id/api'
+    base_url = 'https://office.kemenkeu.go.id'
 
     def __init__(self, session):
         """
@@ -32,6 +32,75 @@ class Nadine(object):
         :return: Full API Endpoint URL
         """
         return self.base_url + endpoint
+
+    def get_user_info(self):
+        """
+        Get user info
+        :return: User Data
+        """
+        return self.__session.get(
+            self.get_endpoint('/Index/UserInfo')
+        ).json()
+
+    def get_config_data(self):
+        """
+        Get user configuration data
+        :return:
+        """
+        return self.__session.get(
+            self.get_endpoint('/Index/GetConfigData')
+        ).json()
+
+    def get_notifications(self, limit=10, offset=0):
+        """
+        Get nadine notification
+        :param limit: data paging limit
+        :param offset: data paging offset
+        :return: list of notification
+        """
+        return self.__session.get(
+            self.get_endpoint('/api/RefFaq/Notifikasi'),
+            params={
+                'limit': limit,
+                'offset': offset,
+            }
+        ).json()
+
+    def get_sticky_message(self, limit=10, offset=0):
+        """
+        Get nadine sticky message
+        :param limit: data paging limit
+        :param offset: data paging offset
+        :return: list of sticky message
+        """
+        return self.__session.get(
+            self.get_endpoint('/Index/GetStickyMessage'),
+            params={
+                'limit': limit,
+                'offset': offset,
+            }
+        )
+
+    @property
+    def version(self):
+        """
+        Get application version, commit message, env, and version hash
+        :return:
+        """
+        return self.__session.get(
+            self.get_endpoint('/api/Versi/versi')
+        ).json()
+
+    def get_tag(self):
+        """
+        Get all generated tag
+        :return: list of tags
+        """
+        return self.__session.get(
+            self.get_endpoint('/api/refTagnd')
+        ).json()
+
+
 
     def get_amplop_nd(self, endpoint, search=None, filter_=None, urgensi='All', reset=False, tag=None, type_=DocumentType.ALL,
                    unit=None, start_date=None, end_date=None, limit=15, offset=0, raw=False):
@@ -93,7 +162,7 @@ class Nadine(object):
         :param offset: Offset result
         :return: Dict atau Raw Requests respon jika raw == True
         """
-        endpoint = self.get_endpoint('/AmplopNd')
+        endpoint = self.get_endpoint('/api/AmplopNd')
         return self.get_amplop_nd(endpoint, search, filter_, urgensi, reset, tag, type_, unit, start_date, end_date,
                                   limit, offset, raw)
 
@@ -116,6 +185,6 @@ class Nadine(object):
         :param offset: Offset result
         :return: Dict atau Raw Requests respon jika raw == True
         """
-        endpoint = self.get_endpoint('/AmplopNd/NdArsipOptimized')
+        endpoint = self.get_endpoint('/api/AmplopNd/NdArsipOptimized')
         return self.get_amplop_nd(endpoint, search, filter_, urgensi, reset, tag, type_, unit, start_date, end_date,
                                   limit, offset, raw)
