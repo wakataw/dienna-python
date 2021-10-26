@@ -188,3 +188,25 @@ class Nadine(object):
         endpoint = self.get_endpoint('/api/AmplopNd/NdArsipOptimized')
         return self.get_amplop_nd(endpoint, search, filter_, urgensi, reset, tag, type_, unit, start_date, end_date,
                                   limit, offset, raw)
+
+    def download_signed_document(self, doc_id, doc_signature, chunk_size=1024*100):
+        """
+        Download signed document blob
+        https://office.kemenkeu.go.id/api/Dokumen/DownloadSigned/12787137/49aa7dc014854cdca3ac967b93080d4d
+        :param doc_id: Document ID
+        :param doc_signature: Document Signature Hash
+        :param chunk_size: Document download buffer size in bytes
+        :return: Document Bytes Generator
+        """
+        endpoint = '{}/{}/{}'.format(
+            self.get_endpoint('/api/Dokumen/DownloadSigned'),
+            doc_id,
+            doc_signature
+        )
+        resp = self.__session.get(
+            endpoint,
+            stream=True,
+        )
+
+        for chunk in resp.iter_content(chunk_size=chunk_size):
+            yield chunk
