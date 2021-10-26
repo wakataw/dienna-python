@@ -266,3 +266,8 @@ class Nadine(object):
             }
         ).json()
 
+    def set_tag(self, amplop_id, *tags):
+        return self.__session.patch(
+            self.get_endpoint('/api/Disposisi/UpdateTag/'+str(amplop_id)),
+            json=tags
+        ).json()
