@@ -267,7 +267,43 @@ class Nadine(object):
         ).json()
 
     def set_tag(self, amplop_id, *tags):
+        """
+        Set amplop tag
+        :param amplop_id: amplop id
+        :param tags: list of tag name
+        :return: amplop json object
+        """
         return self.__session.patch(
             self.get_endpoint('/api/Disposisi/UpdateTag/'+str(amplop_id)),
             json=tags
+        ).json()
+
+    def create_tag(self, tag):
+        """
+        Create tag
+        :param tag: tag name
+        :return: boolean
+        """
+        resp = self.__session.post(
+            self.get_endpoint('/api/refTagnd'),
+            json={
+                "IdTagnd": None,
+                "UnitId": None,
+                "UserId": None,
+                "Name": tag,
+                "CreatedAt": None,
+                "UpdatedAt": None
+            }
+        )
+
+        return True if resp.text.strip() == '1' else False
+
+    def delete_tag(self, tag_id):
+        """
+        Delete tag by tag id
+        :param tag_id: tag id
+        :return: tag object
+        """
+        return self.__session.delete(
+            self.get_endpoint('https://office.kemenkeu.go.id/api/refTagnd/'+str(tag_id))
         ).json()
