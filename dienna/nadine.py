@@ -252,3 +252,17 @@ class Nadine(object):
         return self.__session.get(
             self.get_endpoint('/api/RefJenisnds')
         ).json()
+
+    def get_history_disposisi(self, disposisi_id, amplop_id):
+        """
+        Get history disposisi
+        endpoint: /api/Disposisi/GetHistoryDisposisi/41348944?amplopId=107296136
+        :return:
+        """
+        return self.__session.get(
+            self.get_endpoint('/api/Disposisi/GetHistoryDisposisi/'+str(disposisi_id)),
+            params={
+                'amplopId': amplop_id
+            }
+        ).json()
+
