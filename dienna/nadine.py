@@ -210,3 +210,27 @@ class Nadine(object):
 
         for chunk in resp.iter_content(chunk_size=chunk_size):
             yield chunk
+
+    def mark_as_read(self, id_):
+        """
+        Mark document as read
+        :param id_:
+        :return:
+        """
+        pass
+
+    def get_document_detail(self, doc_id, sender_id):
+        """
+        Get document detail (detil button)
+        :param doc_id: document id
+        :param sender_id: document sender id
+        :return: document information detail
+        """
+
+        return self.__session.get(
+            self.get_endpoint('/api/NdKeluars/NdDataDetail/'+str(doc_id)),
+            params={
+                'pengirimId': sender_id
+            }
+        ).json()
+
