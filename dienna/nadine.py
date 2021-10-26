@@ -16,7 +16,7 @@ class Nadine(object):
     Nadine API Wrapper
     """
 
-    base_url = 'https://office.kemenkeu.go.id/api'
+    base_url = 'https://office.kemenkeu.go.id'
 
     def __init__(self, session):
         """
@@ -32,6 +32,75 @@ class Nadine(object):
         :return: Full API Endpoint URL
         """
         return self.base_url + endpoint
+
+    def get_user_info(self):
+        """
+        Get user info
+        :return: User Data
+        """
+        return self.__session.get(
+            self.get_endpoint('/Index/UserInfo')
+        ).json()
+
+    def get_config_data(self):
+        """
+        Get user configuration data
+        :return:
+        """
+        return self.__session.get(
+            self.get_endpoint('/Index/GetConfigData')
+        ).json()
+
+    def get_notifications(self, limit=10, offset=0):
+        """
+        Get nadine notification
+        :param limit: data paging limit
+        :param offset: data paging offset
+        :return: list of notification
+        """
+        return self.__session.get(
+            self.get_endpoint('/api/RefFaq/Notifikasi'),
+            params={
+                'limit': limit,
+                'offset': offset,
+            }
+        ).json()
+
+    def get_sticky_message(self, limit=10, offset=0):
+        """
+        Get nadine sticky message
+        :param limit: data paging limit
+        :param offset: data paging offset
+        :return: list of sticky message
+        """
+        return self.__session.get(
+            self.get_endpoint('/Index/GetStickyMessage'),
+            params={
+                'limit': limit,
+                'offset': offset,
+            }
+        )
+
+    @property
+    def version(self):
+        """
+        Get application version, commit message, env, and version hash
+        :return:
+        """
+        return self.__session.get(
+            self.get_endpoint('/api/Versi/versi')
+        ).json()
+
+    def get_tag(self):
+        """
+        Get all generated tag
+        :return: list of tags
+        """
+        return self.__session.get(
+            self.get_endpoint('/api/refTagnd')
+        ).json()
+
+
 
     def get_amplop_nd(self, endpoint, search=None, filter_=None, urgensi='All', reset=False, tag=None, type_=DocumentType.ALL,
                    unit=None, start_date=None, end_date=None, limit=15, offset=0, raw=False):
@@ -93,7 +162,7 @@ class Nadine(object):
         :param offset: Offset result
         :return: Dict atau Raw Requests respon jika raw == True
         """
-        endpoint = self.get_endpoint('/AmplopNd')
+        endpoint = self.get_endpoint('/api/AmplopNd')
         return self.get_amplop_nd(endpoint, search, filter_, urgensi, reset, tag, type_, unit, start_date, end_date,
                                   limit, offset, raw)
 
@@ -116,6 +185,89 @@ class Nadine(object):
         :param offset: Offset result
         :return: Dict atau Raw Requests respon jika raw == True
         """
-        endpoint = self.get_endpoint('/AmplopNd/NdArsipOptimized')
+        endpoint = self.get_endpoint('/api/AmplopNd/NdArsipOptimized')
         return self.get_amplop_nd(endpoint, search, filter_, urgensi, reset, tag, type_, unit, start_date, end_date,
                                   limit, offset, raw)
+
+    def download_signed_document(self, doc_id, doc_signature, chunk_size=1024*100):
+        """
+        Download signed document blob
+        https://office.kemenkeu.go.id/api/Dokumen/DownloadSigned/12787137/49aa7dc014854cdca3ac967b93080d4d
+        :param doc_id: Document ID
+        :param doc_signature: Document Signature Hash
+        :param chunk_size: Document download buffer size in bytes
+        :return: Document Bytes Generator
+        """
+        endpoint = '{}/{}/{}'.format(
+            self.get_endpoint('/api/Dokumen/DownloadSigned'),
+            doc_id,
+            doc_signature
+        )
+        resp = self.__session.get(
+            endpoint,
+            stream=True,
+        )
+
+        for chunk in resp.iter_content(chunk_size=chunk_size):
+            yield chunk
+
+    def mark_as_read(self, id_):
+        """
+        Mark document as read
+        :param id_:
+        :return:
+        """
+        pass
+
+    def get_document_detail(self, doc_id, sender_id):
+        """
+        Get document detail (detil button)
+        :param doc_id: document id
+        :param sender_id: document sender id
+        :return: document information detail
+        """
+
+        return self.__session.get(
+            self.get_endpoint('/api/NdKeluars/NdDataDetail/'+str(doc_id)),
+            params={
+                'pengirimId': sender_id
+            }
+        ).json()
+
+    def get_document_no(self, doc_id):
+        """
+        Get document number
+        :param doc_id: document id
+        :return: document number information
+        """
+        return self.__session.get(
+            self.get_endpoint('/api/NdKeluars/GetNomorNd/'+str(doc_id))
+        ).json()
+
+    def get_document_type_ref(self):
+        """
+        Get document type reference
+        :return:
+        """
+        return self.__session.get(
+            self.get_endpoint('/api/RefJenisnds')
+        ).json()
+
+    def get_history_disposisi(self, disposisi_id, amplop_id):
+        """
+        Get history disposisi
+        endpoint: /api/Disposisi/GetHistoryDisposisi/41348944?amplopId=107296136
+        :return:
+        """
+        return self.__session.get(
+            self.get_endpoint('/api/Disposisi/GetHistoryDisposisi/'+str(disposisi_id)),
+            params={
+                'amplopId': amplop_id
+            }
+        ).json()
+
+    def set_tag(self, amplop_id, *tags):
+        return self.__session.patch(
+            self.get_endpoint('/api/Disposisi/UpdateTag/'+str(amplop_id)),
+            json=tags
+        ).json()
