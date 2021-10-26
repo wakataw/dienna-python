@@ -234,3 +234,21 @@ class Nadine(object):
             }
         ).json()
 
+    def get_document_no(self, doc_id):
+        """
+        Get document number
+        :param doc_id: document id
+        :return: document number information
+        """
+        return self.__session.get(
+            self.get_endpoint('/api/NdKeluars/GetNomorNd/'+str(doc_id))
+        ).json()
+
+    def get_document_type_ref(self):
+        """
+        Get document type reference
+        :return:
+        """
+        return self.__session.get(
+            self.get_endpoint('/api/RefJenisnds')
+        ).json()
