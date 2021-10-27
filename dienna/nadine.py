@@ -305,5 +305,5 @@ class Nadine(object):
         :return: tag object
         """
         return self.__session.delete(
-            self.get_endpoint('https://office.kemenkeu.go.id/api/refTagnd/'+str(tag_id))
+            self.get_endpoint('/api/refTagnd/'+str(tag_id))
         ).json()
