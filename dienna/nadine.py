@@ -1,4 +1,6 @@
+import datetime
 import enum
+import time
 
 
 class DocumentType(enum.Enum):
@@ -307,3 +309,15 @@ class Nadine(object):
         return self.__session.delete(
             self.get_endpoint('/api/refTagnd/'+str(tag_id))
         ).json()
+
+    def get_statistik_naskah_dinas(self, tahun=datetime.datetime.now().year):
+        """
+        Get data statistik naskah dinas dari halaman dashboard
+        :param tahun: tahun naskah dinas, default tahun berjalan
+        """
+        return self.__session.get(
+            '/api/AmplopNd/GetTotalNdLaporan',
+            params={
+                'year': tahun
+            }
+        )
