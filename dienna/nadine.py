@@ -1,4 +1,6 @@
+import datetime
 import enum
+import time
 
 
 class DocumentType(enum.Enum):
@@ -305,5 +307,92 @@ class Nadine(object):
         :return: tag object
         """
         return self.__session.delete(
-            self.get_endpoint('https://office.kemenkeu.go.id/api/refTagnd/'+str(tag_id))
+            self.get_endpoint('/api/refTagnd/'+str(tag_id))
+        ).json()
+
+    def get_statistik_naskah_dinas(self, tahun=datetime.datetime.now().year):
+        """
+        Get data statistik naskah dinas dari halaman dashboard
+        :param tahun: tahun naskah dinas, default tahun berjalan
+        """
+        return self.__session.get(
+            self.get_endpoint('/api/AmplopNd/GetTotalNdLaporan'),
+            params={
+                'year': tahun
+            }
+        ).json()
+
+    # /api/AmplopNd/DashboardNaskahKeluar?year=2021
+    def get_dashboard_naskah_keluar(self, tahun=datetime.datetime.now().year):
+        """
+        Get data statistik naskah keluar
+        """
+        return self.__session.get(
+            self.get_endpoint('/api/AmplopNd/DashboardNaskahKeluar'),
+            params={
+                'year': tahun
+            }
+        ).json()
+
+    # /api/AmplopNd/DashboardNaskahKeluarAtasNama?year=2021
+    def get_dashboard_naskah_keluar_atas_nama(self, tahun=datetime.datetime.now().year):
+        return self.__session.get(
+            self.get_endpoint('/api/AmplopNd/DashboardNaskahKeluarAtasNama'),
+            params={
+                'year': tahun
+            }
+        ).json()
+
+    # /api/AmplopNd/DashboardNaskahKeluarPengirimAtasNama?year=2021
+    def get_dashboard_naskah_keluar_pengirim_atas_nama(self, tahun=datetime.datetime.now().year):
+        return self.__session.get(
+            self.get_endpoint('/api/AmplopNd/DashboardNaskahKeluarPengirimAtasNama'),
+            params={
+                'year': tahun
+            }
+        ).json()
+
+    # https://office.kemenkeu.go.id/api/AmplopNd/DashboardNaskahMasuk?year=2021
+    def get_dashboard_naskah_masuk(self, tahun=datetime.datetime.now().year):
+        return self.__session.get(
+            self.get_endpoint('/api/AmplopNd/DashboardNaskahMasuk'),
+            params={
+                'year': tahun
+            }
+        ).json()
+
+    # https://office.kemenkeu.go.id/api/AmplopNd/DashboardNaskahTembusan?year=2021
+    def get_dashboard_nashkah_tembusan(self, tahun=datetime.datetime.now().year):
+        return self.__session.get(
+            self.get_endpoint('/api/AmplopNd/DashboardNaskahTembusan'),
+            params={
+                'year': tahun
+            }
+        ).json()
+
+    # /api/AmplopNd/DashboardNaskahDisposisiMasuk?year=2021
+    def get_dashboard_naskah_disposisi_masuk(self, tahun=datetime.datetime.now().year):
+        return self.__session.get(
+            self.get_endpoint('/api/AmplopNd/DashboardNaskahDisposisiMasuk'),
+            params={
+                'year': tahun
+            }
+        ).json()
+
+    # /api/AmplopNd/DashboardNaskahDisposisiKeluar?year=2021
+    def get_dashboard_naskah_disposisi_keluar(self, tahun=datetime.datetime.now().year):
+        return self.__session.get(
+            self.get_endpoint('/api/AmplopNd/DashboardNaskahDisposisiKeluar'),
+            params={
+                'year': tahun
+            }
+        ).json()
+
+    # /api/AmplopNd/DashboardNaskahDraft?year=2021
+    def get_dashboard_naskah_draft(self, tahun=datetime.datetime.now().year):
+        return self.__session.get(
+            self.get_endpoint('/api/AmplopNd/DashboardNaskahDraft'),
+            params={
+                'year': tahun
+            }
         ).json()
