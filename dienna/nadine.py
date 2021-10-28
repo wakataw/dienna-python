@@ -2,6 +2,8 @@ import datetime
 import enum
 import time
 
+from dienna import AuthenticationManager
+
 
 class DocumentType(enum.Enum):
     """
@@ -20,12 +22,12 @@ class Nadine(object):
 
     base_url = 'https://office.kemenkeu.go.id'
 
-    def __init__(self, session):
+    def __init__(self, am: AuthenticationManager):
         """
         Object constructor
         :param session: requests session object
         """
-        self.__session = session
+        self.am = am
 
     def get_endpoint(self, endpoint):
         """
@@ -40,7 +42,7 @@ class Nadine(object):
         Get user info
         :return: User Data
         """
-        return self.__session.get(
+        return self.am.session.get(
             self.get_endpoint('/Index/UserInfo')
         ).json()
 
@@ -49,7 +51,7 @@ class Nadine(object):
         Get user configuration data
         :return:
         """
-        return self.__session.get(
+        return self.am.session.get(
             self.get_endpoint('/Index/GetConfigData')
         ).json()
 
@@ -60,7 +62,7 @@ class Nadine(object):
         :param offset: data paging offset
         :return: list of notification
         """
-        return self.__session.get(
+        return self.am.session.get(
             self.get_endpoint('/api/RefFaq/Notifikasi'),
             params={
                 'limit': limit,
@@ -75,7 +77,7 @@ class Nadine(object):
         :param offset: data paging offset
         :return: list of sticky message
         """
-        return self.__session.get(
+        return self.am.session.get(
             self.get_endpoint('/Index/GetStickyMessage'),
             params={
                 'limit': limit,
@@ -89,7 +91,7 @@ class Nadine(object):
         Get application version, commit message, env, and version hash
         :return:
         """
-        return self.__session.get(
+        return self.am.session.get(
             self.get_endpoint('/api/Versi/versi')
         ).json()
 
@@ -98,7 +100,7 @@ class Nadine(object):
         Get all generated tag
         :return: list of tags
         """
-        return self.__session.get(
+        return self.am.session.get(
             self.get_endpoint('/api/refTagnd')
         ).json()
 
@@ -121,7 +123,7 @@ class Nadine(object):
         :param offset: Offset result
         :return: Dict atau Raw Requests respon jika raw == True
         """
-        resp = self.__session.get(
+        resp = self.am.session.get(
             endpoint,
             params={
                 'search': search,
@@ -203,7 +205,7 @@ class Nadine(object):
             doc_id,
             doc_signature
         )
-        resp = self.__session.get(
+        resp = self.am.session.get(
             endpoint,
             stream=True,
         )
@@ -218,7 +220,7 @@ class Nadine(object):
         :param amplop_ids: list of amplop id to update
         :return: amplop status
         """
-        return self.__session.patch(
+        return self.am.session.patch(
             self.get_endpoint('/api/Disposisi/UpdateStatus/1'),
             json=amplop_ids
         ).json()
@@ -231,7 +233,7 @@ class Nadine(object):
         :return: document information detail
         """
 
-        return self.__session.get(
+        return self.am.session.get(
             self.get_endpoint('/api/NdKeluars/NdDataDetail/'+str(doc_id)),
             params={
                 'pengirimId': sender_id
@@ -244,7 +246,7 @@ class Nadine(object):
         :param doc_id: document id
         :return: document number information
         """
-        return self.__session.get(
+        return self.am.session.get(
             self.get_endpoint('/api/NdKeluars/GetNomorNd/'+str(doc_id))
         ).json()
 
@@ -253,7 +255,7 @@ class Nadine(object):
         Get document type reference
         :return:
         """
-        return self.__session.get(
+        return self.am.session.get(
             self.get_endpoint('/api/RefJenisnds')
         ).json()
 
@@ -265,7 +267,7 @@ class Nadine(object):
         :param amplop_id: amplop id
         :return:
         """
-        return self.__session.get(
+        return self.am.session.get(
             self.get_endpoint('/api/Disposisi/GetHistoryDisposisi/'+str(disposisi_id)),
             params={
                 'amplopId': amplop_id
@@ -279,7 +281,7 @@ class Nadine(object):
         :param tags: list of tag name
         :return: amplop json object
         """
-        return self.__session.patch(
+        return self.am.session.patch(
             self.get_endpoint('/api/Disposisi/UpdateTag/'+str(amplop_id)),
             json=tags
         ).json()
@@ -290,7 +292,7 @@ class Nadine(object):
         :param tag: tag name
         :return: boolean
         """
-        resp = self.__session.post(
+        resp = self.am.session.post(
             self.get_endpoint('/api/refTagnd'),
             json={
                 "IdTagnd": None,
@@ -310,7 +312,7 @@ class Nadine(object):
         :param tag_id: tag id
         :return: tag object
         """
-        return self.__session.delete(
+        return self.am.session.delete(
             self.get_endpoint('/api/refTagnd/'+str(tag_id))
         ).json()
 
@@ -319,7 +321,7 @@ class Nadine(object):
         Get data statistik naskah dinas dari halaman dashboard
         :param tahun: tahun naskah dinas, default tahun berjalan
         """
-        return self.__session.get(
+        return self.am.session.get(
             self.get_endpoint('/api/AmplopNd/GetTotalNdLaporan'),
             params={
                 'year': tahun
@@ -331,7 +333,7 @@ class Nadine(object):
         Get data statistik naskah dinas keluar dari halaman dashboard
         :param tahun: tahun naskah dinas, default tahun berjalan
         """
-        return self.__session.get(
+        return self.am.session.get(
             self.get_endpoint('/api/AmplopNd/DashboardNaskahKeluar'),
             params={
                 'year': tahun
@@ -343,7 +345,7 @@ class Nadine(object):
         Get data statistik naskah dinas keluar atas nama dari halaman dashboard
         :param tahun: tahun naskah dinas, default tahun berjalan
         """
-        return self.__session.get(
+        return self.am.session.get(
             self.get_endpoint('/api/AmplopNd/DashboardNaskahKeluarAtasNama'),
             params={
                 'year': tahun
@@ -355,7 +357,7 @@ class Nadine(object):
         Get data statistik naskah dinas keluar pengirim atas nama dari halaman dashboard
         :param tahun: tahun naskah dinas, default tahun berjalan
         """
-        return self.__session.get(
+        return self.am.session.get(
             self.get_endpoint('/api/AmplopNd/DashboardNaskahKeluarPengirimAtasNama'),
             params={
                 'year': tahun
@@ -367,7 +369,7 @@ class Nadine(object):
         Get data statistik naskah dinas masuk dari halaman dashboard
         :param tahun: tahun naskah dinas, default tahun berjalan
         """
-        return self.__session.get(
+        return self.am.session.get(
             self.get_endpoint('/api/AmplopNd/DashboardNaskahMasuk'),
             params={
                 'year': tahun
@@ -379,7 +381,7 @@ class Nadine(object):
         Get data statistik naskah dinas tembusan dari halaman dashboard
         :param tahun: tahun naskah dinas, default tahun berjalan
         """
-        return self.__session.get(
+        return self.am.session.get(
             self.get_endpoint('/api/AmplopNd/DashboardNaskahTembusan'),
             params={
                 'year': tahun
@@ -391,7 +393,7 @@ class Nadine(object):
         Get data statistik naskah dinas disposisi masuk dari halaman dashboard
         :param tahun: tahun naskah dinas, default tahun berjalan
         """
-        return self.__session.get(
+        return self.am.session.get(
             self.get_endpoint('/api/AmplopNd/DashboardNaskahDisposisiMasuk'),
             params={
                 'year': tahun
@@ -403,7 +405,7 @@ class Nadine(object):
         Get data statistik naskah dinas disposisi keluar dari halaman dashboard
         :param tahun: tahun naskah dinas, default tahun berjalan
         """
-        return self.__session.get(
+        return self.am.session.get(
             self.get_endpoint('/api/AmplopNd/DashboardNaskahDisposisiKeluar'),
             params={
                 'year': tahun
@@ -415,7 +417,7 @@ class Nadine(object):
         Get data statistik draft naskah dinas dari halaman dashboard
         :param tahun: tahun naskah dinas, default tahun berjalan
         """
-        return self.__session.get(
+        return self.am.session.get(
             self.get_endpoint('/api/AmplopNd/DashboardNaskahDraft'),
             params={
                 'year': tahun
