@@ -215,13 +215,13 @@ class Nadine(object):
         """
         Mark document as read
         /api/Disposisi/UpdateStatus/1
-        :param id_:
-        :return:
+        :param amplop_ids: list of amplop id to update
+        :return: amplop status
         """
         return self.__session.patch(
             self.get_endpoint('/api/Disposisi/UpdateStatus/1'),
             json=amplop_ids
-        )
+        ).json()
 
     def get_document_detail(self, doc_id, sender_id):
         """
@@ -261,6 +261,8 @@ class Nadine(object):
         """
         Get history disposisi
         endpoint: /api/Disposisi/GetHistoryDisposisi/41348944?amplopId=107296136
+        :param disposisi_id: disposisi id
+        :param amplop_id: amplop id
         :return:
         """
         return self.__session.get(
@@ -324,10 +326,10 @@ class Nadine(object):
             }
         ).json()
 
-    # /api/AmplopNd/DashboardNaskahKeluar?year=2021
     def get_dashboard_naskah_keluar(self, tahun=datetime.datetime.now().year):
         """
-        Get data statistik naskah keluar
+        Get data statistik naskah dinas keluar dari halaman dashboard
+        :param tahun: tahun naskah dinas, default tahun berjalan
         """
         return self.__session.get(
             self.get_endpoint('/api/AmplopNd/DashboardNaskahKeluar'),
@@ -336,8 +338,11 @@ class Nadine(object):
             }
         ).json()
 
-    # /api/AmplopNd/DashboardNaskahKeluarAtasNama?year=2021
     def get_dashboard_naskah_keluar_atas_nama(self, tahun=datetime.datetime.now().year):
+        """
+        Get data statistik naskah dinas keluar atas nama dari halaman dashboard
+        :param tahun: tahun naskah dinas, default tahun berjalan
+        """
         return self.__session.get(
             self.get_endpoint('/api/AmplopNd/DashboardNaskahKeluarAtasNama'),
             params={
@@ -345,8 +350,11 @@ class Nadine(object):
             }
         ).json()
 
-    # /api/AmplopNd/DashboardNaskahKeluarPengirimAtasNama?year=2021
     def get_dashboard_naskah_keluar_pengirim_atas_nama(self, tahun=datetime.datetime.now().year):
+        """
+        Get data statistik naskah dinas keluar pengirim atas nama dari halaman dashboard
+        :param tahun: tahun naskah dinas, default tahun berjalan
+        """
         return self.__session.get(
             self.get_endpoint('/api/AmplopNd/DashboardNaskahKeluarPengirimAtasNama'),
             params={
@@ -354,8 +362,11 @@ class Nadine(object):
             }
         ).json()
 
-    # https://office.kemenkeu.go.id/api/AmplopNd/DashboardNaskahMasuk?year=2021
     def get_dashboard_naskah_masuk(self, tahun=datetime.datetime.now().year):
+        """
+        Get data statistik naskah dinas masuk dari halaman dashboard
+        :param tahun: tahun naskah dinas, default tahun berjalan
+        """
         return self.__session.get(
             self.get_endpoint('/api/AmplopNd/DashboardNaskahMasuk'),
             params={
@@ -363,8 +374,11 @@ class Nadine(object):
             }
         ).json()
 
-    # https://office.kemenkeu.go.id/api/AmplopNd/DashboardNaskahTembusan?year=2021
     def get_dashboard_nashkah_tembusan(self, tahun=datetime.datetime.now().year):
+        """
+        Get data statistik naskah dinas tembusan dari halaman dashboard
+        :param tahun: tahun naskah dinas, default tahun berjalan
+        """
         return self.__session.get(
             self.get_endpoint('/api/AmplopNd/DashboardNaskahTembusan'),
             params={
@@ -372,8 +386,11 @@ class Nadine(object):
             }
         ).json()
 
-    # /api/AmplopNd/DashboardNaskahDisposisiMasuk?year=2021
     def get_dashboard_naskah_disposisi_masuk(self, tahun=datetime.datetime.now().year):
+        """
+        Get data statistik naskah dinas disposisi masuk dari halaman dashboard
+        :param tahun: tahun naskah dinas, default tahun berjalan
+        """
         return self.__session.get(
             self.get_endpoint('/api/AmplopNd/DashboardNaskahDisposisiMasuk'),
             params={
@@ -381,8 +398,11 @@ class Nadine(object):
             }
         ).json()
 
-    # /api/AmplopNd/DashboardNaskahDisposisiKeluar?year=2021
     def get_dashboard_naskah_disposisi_keluar(self, tahun=datetime.datetime.now().year):
+        """
+        Get data statistik naskah dinas disposisi keluar dari halaman dashboard
+        :param tahun: tahun naskah dinas, default tahun berjalan
+        """
         return self.__session.get(
             self.get_endpoint('/api/AmplopNd/DashboardNaskahDisposisiKeluar'),
             params={
@@ -390,8 +410,11 @@ class Nadine(object):
             }
         ).json()
 
-    # /api/AmplopNd/DashboardNaskahDraft?year=2021
     def get_dashboard_naskah_draft(self, tahun=datetime.datetime.now().year):
+        """
+        Get data statistik draft naskah dinas dari halaman dashboard
+        :param tahun: tahun naskah dinas, default tahun berjalan
+        """
         return self.__session.get(
             self.get_endpoint('/api/AmplopNd/DashboardNaskahDraft'),
             params={
