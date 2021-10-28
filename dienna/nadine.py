@@ -102,8 +102,6 @@ class Nadine(object):
             self.get_endpoint('/api/refTagnd')
         ).json()
 
-
-
     def get_amplop_nd(self, endpoint, search=None, filter_=None, urgensi='All', reset=False, tag=None, type_=DocumentType.ALL,
                    unit=None, start_date=None, end_date=None, limit=15, offset=0, raw=False):
         """
@@ -213,13 +211,17 @@ class Nadine(object):
         for chunk in resp.iter_content(chunk_size=chunk_size):
             yield chunk
 
-    def mark_as_read(self, id_):
+    def mark_as_read(self, *amplop_ids):
         """
         Mark document as read
+        /api/Disposisi/UpdateStatus/1
         :param id_:
         :return:
         """
-        pass
+        return self.__session.patch(
+            self.get_endpoint('/api/Disposisi/UpdateStatus/1'),
+            json=amplop_ids
+        )
 
     def get_document_detail(self, doc_id, sender_id):
         """
