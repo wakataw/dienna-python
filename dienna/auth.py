@@ -10,21 +10,21 @@ class AuthenticationManager(object):
 
     def __init__(self):
         logging.debug("Session init")
-        self.__session = requests.session()
+        self.session = requests.session()
         self.headers = {
             'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) '
                           'Chrome/94.0.4606.81 Safari/537.36'
         }
 
     def get_oauth_data(self):
-        resp = self.__session.get('https://office.kemenkeu.go.id/index/index')
+        resp = self.session.get('https://office.kemenkeu.go.id/index/index')
         soup = Bs(resp.content, 'html5lib')
         return soup.form.get('action'), {
             i.get('name'): i.get('value') for i in soup.form.find_all('input') if i.get('name') is not None
         }
 
     def connect_authorize(self, url, data):
-        resp = self.__session.post(
+        resp = self.session.post(
             url,
             data=data
         )
@@ -39,7 +39,7 @@ class AuthenticationManager(object):
             'button': 'login',
         })
 
-        resp = self.__session.post(
+        resp = self.session.post(
             url,
             data=form_data
         )
@@ -47,7 +47,7 @@ class AuthenticationManager(object):
         return soup.form.get('action'), {i.get('name'): i.get('value') for i in soup.form.find_all('input')}
 
     def sign_in_oidc(self, url, data):
-        resp = self.__session.post(
+        resp = self.session.post(
             url,
             data=data
         )
@@ -55,15 +55,15 @@ class AuthenticationManager(object):
         return resp.url == 'https://office.kemenkeu.go.id/home'
 
     def logout(self):
-        resp = self.__session.get('https://office.kemenkeu.go.id/Index/Logout')
+        resp = self.session.get('https://office.kemenkeu.go.id/Index/Logout')
         soup = Bs(resp.content, 'html5lib')
 
-        self.__session.post(
+        self.session.post(
             soup.form.get('action'),
             data={i.get('name'): i.get('value') for i in soup.form.find_all('input')}
         )
 
-    def get_session(self, username, password):
+    def create_session(self, username, password):
         logging.debug("Get session")
 
         url, oauth_data = self.get_oauth_data()
@@ -78,9 +78,9 @@ class AuthenticationManager(object):
         status = self.sign_in_oidc(url, login_data)
         logging.debug("Login status {}".format(status))
 
-        return status, self.__session
+        return status
 
     def __del__(self):
-        if self.__session:
-            self.__session.close()
-            del self.__session
+        if self.session:
+            self.session.close()
+            del self.session
