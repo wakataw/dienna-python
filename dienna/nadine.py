@@ -1,6 +1,5 @@
 import datetime
 import enum
-import time
 
 from dienna import AuthenticationManager
 
@@ -222,6 +221,18 @@ class Nadine(object):
         """
         return self.am.session.patch(
             self.get_endpoint('/api/Disposisi/UpdateStatus/1'),
+            json=amplop_ids
+        ).json()
+
+    def archive_documents(self, *amplop_ids):
+        """
+        Archive document
+        /api/Disposisi/UpdateStatus/2
+        :param aplop_ids: list of amplop id
+        :return: amplop status
+        """
+        return self.am.session.patch(
+            self.get_endpoint('/api/Disposisi/Updatestatus/2'),
             json=amplop_ids
         ).json()
 

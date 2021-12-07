@@ -11,8 +11,8 @@ class TestSSO(unittest.TestCase):
 
     def test_login(self):
         am = AuthenticationManager()
-        status, session = am.get_session(os.environ['SSO_USER'], os.environ['SSO_PASS'])
-        resp = session.get(
+        am.create_session(os.environ['SSO_USER'], os.environ['SSO_PASS'])
+        resp = am.session.get(
             'https://office.kemenkeu.go.id/api/AmplopNd',
             params={'urgensi': 'All', 'reset': 'false', 'tagnd': 'All', 'limit': '1', 'offset': '0'}
         )
@@ -25,8 +25,8 @@ class TestNadine(unittest.TestCase):
 
     def setUp(self) -> None:
         self.am = AuthenticationManager()
-        status, session = self.am.get_session(os.environ['SSO_USER'], os.environ['SSO_PASS'])
-        self.nadine = Nadine(session=session)
+        status = self.am.create_session(os.environ['SSO_USER'], os.environ['SSO_PASS'])
+        self.nadine = Nadine(am=self.am)
 
     def test_mejaku(self):
         resp = self.nadine.get_mejaku(limit=15)
